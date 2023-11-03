@@ -1,0 +1,8 @@
+{
+  "name": "smart-minutes",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:yccttg/smart-minutes.git",
+  "author": "Sudip Ghimire",
+  "license": "MIT"
+}
