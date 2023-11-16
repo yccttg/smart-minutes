@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/router";
 import { PropsWithChildren } from "react";
 
 const NavItem = ({ href, children }: PropsWithChildren & { href: string }) => {
@@ -20,9 +21,14 @@ const NavItem = ({ href, children }: PropsWithChildren & { href: string }) => {
 };
 
 export const Header = () => {
+  const pathName = usePathname();
   return (
     <div className="bg-primary">
-      <ul className="flex gap-4 p-2 pb-0 h-[150px] items-end">
+      <ul
+        className={`flex gap-4 p-2 pb-0 items-end ${
+          pathName === "/" ? "h-80" : ""
+        }`}
+      >
         <NavItem href="/">Home</NavItem>
         <NavItem href="/minutes">Minutes</NavItem>
       </ul>
