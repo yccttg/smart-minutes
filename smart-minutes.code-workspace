@@ -4,11 +4,8 @@
 			"path": "contract"
 		},
 		{
-			"path": "ui"
-		},
-		{
 			"path": ".",
-			"name": "root"
+			"name": "ui",
 		},
 	],
 	"settings": {}
