@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useRouter } from "next/router";
 import { PropsWithChildren } from "react";
-import BoudhaImageBg from "public/images/bouddha.png";
+import BouddhaImageBg from "public/images/bouddha.png";
 import Image from "next/image";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 const NavItem = ({ href, children }: PropsWithChildren & { href: string }) => {
   const pathName = usePathname();
@@ -27,16 +27,18 @@ export const Header = () => {
   return (
     <div className={`bg-primary relative h-96`}>
       <Image
-        src={BoudhaImageBg.src}
+        src={BouddhaImageBg.src}
         alt=""
         width={"100"}
         height={"100"}
         className="w-full h-full absolute -z-0 object-cover"
         unoptimized
       />
-      <ul className={`flex gap-4 p-2 pb-0 items-end absolute w-full bottom-0`}>
+      <ul className={`flex gap-4 p-2 pb-0 items-end absolute w-full`}>
         <NavItem href="/">Home</NavItem>
         <NavItem href="/minutes">Minutes</NavItem>
+        <div className="flex grow" />
+        <ConnectButton />
       </ul>
     </div>
   );
