@@ -1,11 +1,12 @@
 {
 	"folders": [
 		{
-			"path": "contract"
+			"path": ".",
+			"name": "frontend",
 		},
 		{
-			"path": ".",
-			"name": "ui",
+			"path": "contract",
+			"name": "contract"
 		},
 	],
 	"settings": {}

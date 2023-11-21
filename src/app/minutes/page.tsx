@@ -15,8 +15,8 @@ export default function Minutes() {
   const router = useRouter();
   return (
     <main className="p-4 lg:p-8 flex flex-col items-center">
-      <h1 className="text-2xl font-bold">Minutes Page</h1>
       <div className="flex flex-wrap w-full max-w-screen-xl">
+        <h1 className="text-2xl font-bold text-left w-full my-5">Minutes</h1>
         {minutes.map(({ id }) => (
           <div
             key={id}

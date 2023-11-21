@@ -9,9 +9,11 @@ export default function Minutes() {
   return (
     <main className="p-4 lg:p-8">
       <h1 className="text-2xl font-bold">Minutes Detail Page</h1>
-      <Link href={"/minutes"} className="text-xl font-bold text-secondary">
-        Go Back to minutes
-      </Link>
+      <div className="min-h-screen">
+        <Link href={"/minutes"} className="text-xl font-bold text-secondary">
+          Go Back to minutes
+        </Link>
+      </div>
     </main>
   );
 }

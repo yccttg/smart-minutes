@@ -4,13 +4,15 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
 import { PropsWithChildren } from "react";
+import BoudhaImageBg from "public/images/bouddha.png";
+import Image from "next/image";
 
 const NavItem = ({ href, children }: PropsWithChildren & { href: string }) => {
   const pathName = usePathname();
   const isActive = pathName === href;
   return (
     <Link
-      className={`bg-primary hover:bg-primary-600 p-2 block rounded-t-lg ${
+      className={`bg-primary hover:bg-primary-600 p-2 block rounded-t-lg text-2xl ${
         isActive ? "bg-primary-600 font-bold" : "bg-primary"
       }`}
       href={href}
@@ -23,12 +25,16 @@ const NavItem = ({ href, children }: PropsWithChildren & { href: string }) => {
 export const Header = () => {
   const pathName = usePathname();
   return (
-    <div className="bg-primary">
-      <ul
-        className={`flex gap-4 p-2 pb-0 items-end ${
-          pathName === "/" ? "h-80" : ""
-        }`}
-      >
+    <div className={`bg-primary relative h-96`}>
+      <Image
+        src={BoudhaImageBg.src}
+        alt=""
+        width={"100"}
+        height={"100"}
+        className="w-full h-full absolute -z-0 object-cover"
+        unoptimized
+      />
+      <ul className={`flex gap-4 p-2 pb-0 items-end absolute w-full bottom-0`}>
         <NavItem href="/">Home</NavItem>
         <NavItem href="/minutes">Minutes</NavItem>
       </ul>
