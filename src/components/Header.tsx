@@ -12,7 +12,7 @@ const NavItem = ({ href, children }: PropsWithChildren & { href: string }) => {
   const isActive = pathName === href;
   return (
     <Link
-      className={`bg-primary hover:bg-primary-600 p-2 block rounded-t-lg text-2xl ${
+      className={`bg-primary hover:bg-primary-600 p-2 block rounded-t-lg text-xl h-10 ${
         isActive ? "bg-primary-600 font-bold" : "bg-primary"
       }`}
       href={href}
@@ -25,7 +25,11 @@ const NavItem = ({ href, children }: PropsWithChildren & { href: string }) => {
 export const Header = () => {
   const pathName = usePathname();
   return (
-    <div className={`bg-primary relative h-96`}>
+    <div
+      className={`bg-primary transition-all ${
+        pathName == "/" ? "relative h-96" : "h-16 sticky top-0"
+      }`}
+    >
       <Image
         src={BouddhaImageBg.src}
         alt=""
@@ -34,7 +38,7 @@ export const Header = () => {
         className="w-full h-full absolute -z-0 object-cover"
         unoptimized
       />
-      <ul className={`flex gap-4 p-2 pb-0 items-end absolute w-full`}>
+      <ul className={`flex gap-4 p-3 items-end absolute w-full`}>
         <NavItem href="/">Home</NavItem>
         <NavItem href="/minutes">Minutes</NavItem>
         <div className="flex grow" />
