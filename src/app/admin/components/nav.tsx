@@ -23,7 +23,7 @@ const NavItem = ({
           children ? "font-bold" : ""
         } ${pathname === href ? "font-bold bg-slate-100" : ""} ${
           href ? "cursor-pointer  hover:bg-slate-100/50" : ""
-        } ${disabled ? "text-gray-500" : "text-secondary"}`}
+        } ${disabled ? "text-gray-500" : "text-primary"}`}
         onClick={() => {
           if (href && !disabled) router.push(href);
         }}

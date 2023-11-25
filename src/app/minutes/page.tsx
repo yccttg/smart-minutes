@@ -25,7 +25,7 @@ export default function Minutes() {
               router.push(`/minutes/${id}`);
             }}
           >
-            <div className=" bg-primary/10 p-2 rounded-lg w-full h-full hover:bg-primary/20">
+            <div className=" bg-secondary/10 p-2 rounded-lg w-full h-full hover:bg-secondary/20">
               {id}
             </div>
           </div>

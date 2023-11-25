@@ -18,7 +18,7 @@ export default function AdminRootLayout({
         This page can only be displayed on larger displays. please switch to
         larger display to view this page
       </h2>
-      <div className="hidden absolute h-full md:flex w-[300px] bg-slate-200 shadow-lg z-10 overflow-y-auto">
+      <div className="hidden absolute h-full md:flex w-[300px] bg-primary/10 shadow-lg z-10 overflow-y-auto">
         <AdminNav />
       </div>
       <div className="hidden absolute left-[300px] right-0 h-full md:flex flex-col z-0 overflow-y-auto pl-10 pt-10">

@@ -19,8 +19,8 @@ const NavItem = ({
   const isActive = pathName === href;
   return (
     <Link
-      className={`hover:bg-primary-600 p-2 block rounded-lg text-xl h-10 ${
-        isActive ? "bg-primary-600 font-bold" : ""
+      className={`hover:bg-secondary-600/70 p-2 block rounded-lg text-xl h-10 ${
+        isActive ? "bg-secondary-600 font-bold" : ""
       }`}
       href={href}
       onClick={onClick}
@@ -37,7 +37,7 @@ export const Header = () => {
   const Utility = () => {};
   return (
     <div
-      className={`bg-primary transition-all sticky ${
+      className={`bg-secondary transition-all sticky ${
         pathName == "/" ? "h-96 -top-[320px]" : "h-16 top-0"
       } text-white`}
     >
@@ -50,7 +50,7 @@ export const Header = () => {
         unoptimized
       />
       <div
-        className={`flex flex-col md:flex-row items-start gap-4 md:p-3 md:items-end w-full bg-secondary sticky top-0`}
+        className={`flex flex-col md:flex-row items-start gap-4 md:p-3 md:items-end w-full bg-primary sticky top-0`}
       >
         <div className="flex justify-between w-full md:w-auto min-w-[250px] items-center p-3 md:p-0">
           <Link
