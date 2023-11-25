@@ -19,8 +19,8 @@ const NavItem = ({
   const isActive = pathName === href;
   return (
     <Link
-      className={`hover:bg-secondary-600/70 p-2 block rounded-lg text-xl h-10 ${
-        isActive ? "bg-secondary-600 font-bold" : ""
+      className={`hover:text-secondary-800 p-2 block rounded-lg text-xl h-10 ${
+        isActive ? "text-secondary-600 font-bold" : ""
       }`}
       href={href}
       onClick={onClick}

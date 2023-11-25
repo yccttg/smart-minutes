@@ -21,9 +21,13 @@ const NavItem = ({
       <div
         className={`p-2 flex justify-between items-center ${
           children ? "font-bold" : ""
-        } ${pathname === href ? "font-bold bg-slate-100" : ""} ${
-          href ? "cursor-pointer  hover:bg-slate-100/50" : ""
-        } ${disabled ? "text-gray-500" : "text-primary"}`}
+        } ${
+          pathname === href
+            ? "font-bold bg-slate-100 text-secondary"
+            : "text-primary"
+        } ${href ? "cursor-pointer  hover:bg-slate-100/50" : ""} ${
+          disabled ? "text-gray-500" : ""
+        }`}
         onClick={() => {
           if (href && !disabled) router.push(href);
         }}
