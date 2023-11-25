@@ -30,11 +30,15 @@ contract SmartMinute is ERC721URIStorage, Membership, Ownable, Pausable {
         _;
     }
 
-    function _mint(
-        string memory _tokenUri,
-        address _to
-    ) internal whenNotPaused returns (uint256) {
-        _safeMint(_to, _tokenCounter);
+    modifier forbidden() {
+        revert("ERROR: METHOD_FORBIDDEN");
+        _;
+    }
+
+    function _mint(address _to) internal whenNotPaused returns (uint256) {
+        uint256 newTokenId = totalSupply() + 1;
+        _safeMint(_to, newTokenId);
+        return newTokenId;
     }
 
     // Override supportsInterface from AccessControl that is used in Membership and ERC721URIStorage
@@ -45,4 +49,22 @@ contract SmartMinute is ERC721URIStorage, Membership, Ownable, Pausable {
             AccessControl.supportsInterface(interfaceId) ||
             ERC721URIStorage.supportsInterface(interfaceId);
     }
+
+    function totalSupply() public view returns (uint256) {
+        return _tokenCounter;
+    }
+
+    /**
+     * Listing out all minutes
+     */
+    function listAllMeetingMinutes() external view returns (string[] memory) {
+        uint256 totalTokens = totalSupply();
+        string[] memory tokenUris = new string[](totalTokens);
+        for (uint256 i = 0; i < totalTokens; i++) {
+            tokenUris[i] = tokenURI(i + 1);
+        }
+        return tokenUris;
+    }
+
+    function addMeetingMinute() external onlyOwner {}
 }

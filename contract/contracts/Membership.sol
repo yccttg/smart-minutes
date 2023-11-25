@@ -19,6 +19,11 @@ abstract contract Membership is AccessControl {
         _;
     }
 
+    modifier onlyAdmin() {
+        _checkRole(DEFAULT_ADMIN_ROLE);
+        _;
+    }
+
     modifier onlyDonor() {
         _checkRole(DONOR_ROLE);
         _;
