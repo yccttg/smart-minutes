@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-
-const inter = Inter({ subsets: ["latin"] });
-
-import RootLayout from "@/app/layout";
 import { AdminNav } from "./components/nav";
+import { AdminPage } from "./AdminPage";
 
 export const metadata: Metadata = {
   title: "Smart Minutes Admin",
@@ -26,7 +22,7 @@ export default function AdminRootLayout({
         <AdminNav />
       </div>
       <div className="hidden absolute left-[300px] right-0 h-full md:flex flex-col z-0 overflow-y-auto pl-10 pt-10">
-        <div className="max-w-screen-lg">{children}</div>
+        <AdminPage>{children}</AdminPage>
       </div>
     </div>
   );

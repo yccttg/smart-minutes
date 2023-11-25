@@ -2,24 +2,30 @@
 import { useRouter, usePathname } from "next/navigation";
 import { PropsWithChildren } from "react";
 import ArrowRight from "public/svg/arrow-right.svg";
+import { useAccount } from "wagmi";
 
 const NavItem = ({
   href,
   title,
   children,
-}: PropsWithChildren & { href?: string; title: string }) => {
+  disabled,
+}: PropsWithChildren & {
+  href?: string;
+  title: string;
+  disabled?: boolean;
+}) => {
   const pathname = usePathname();
   const router = useRouter();
   return (
     <div className={`flex flex-col`}>
       <div
-        className={`p-2 flex justify-between items-center text-secondary ${
+        className={`p-2 flex justify-between items-center ${
           children ? "font-bold" : ""
         } ${pathname === href ? "font-bold bg-slate-100" : ""} ${
           href ? "cursor-pointer  hover:bg-slate-100/50" : ""
-        }`}
+        } ${disabled ? "text-gray-500" : "text-secondary"}`}
         onClick={() => {
-          if (href) router.push(href);
+          if (href && !disabled) router.push(href);
         }}
       >
         <span className={``}>{title}</span>
@@ -41,6 +47,7 @@ type NavItemType = {
 };
 
 export const AdminNav = () => {
+  const { isConnected } = useAccount();
   const navItems: NavItemType[] = [
     {
       title: "Admin",
@@ -64,10 +71,15 @@ export const AdminNav = () => {
   return (
     <div className="flex flex-col gap-2 w-full px-1 py-5">
       {navItems.map(({ title, href, children }, index) => (
-        <NavItem key={index} title={title} href={href}>
+        <NavItem key={index} title={title} href={href} disabled={!isConnected}>
           {children &&
             children.map(({ title, href }, i) => (
-              <NavItem key={i} title={title} href={href} />
+              <NavItem
+                key={i}
+                title={title}
+                href={href}
+                disabled={!isConnected}
+              />
             ))}
         </NavItem>
       ))}

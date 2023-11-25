@@ -1,3 +1,13 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": "next/core-web-vitals",
+  "rules": {
+    "no-mixed-spaces-and-tabs": "error",
+    "indent": [
+      "warn",
+      2
+    ],
+    "semi": [
+      "always"
+    ]
+  }
 }
