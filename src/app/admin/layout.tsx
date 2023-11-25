@@ -25,8 +25,8 @@ export default function AdminRootLayout({
       <div className="hidden absolute h-full md:flex w-[300px] bg-slate-200 shadow-lg z-10 overflow-y-auto">
         <AdminNav />
       </div>
-      <div className="hidden absolute left-[300px] right-0 h-full md:flex z-0 overflow-y-auto">
-        {children}
+      <div className="hidden absolute left-[300px] right-0 h-full md:flex flex-col z-0 overflow-y-auto pl-10 pt-10">
+        <div className="max-w-screen-lg">{children}</div>
       </div>
     </div>
   );
