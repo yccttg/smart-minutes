@@ -1,25 +1,39 @@
 import { isAddress } from "ethers";
-import { zfd } from "zod-form-data";
+import { z } from "zod";
 
 type ErrorBody = {
   [k: string]: [string];
 };
 
-const schema = zfd.formData({
-  nftCreator: zfd.text(),
-  file: zfd.text(),
+const schema = z.object({
+  address: z.string(),
+  file: z.string(),
+  metadata: z.object({
+    date: z.string(),
+    title: z.string(),
+    agenda: z.array(z.string()),
+    members: z.array(z.string()),
+    description: z.string().optional(),
+    conclusion: z.string().optional(),
+  }),
 });
 
 const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
 const errors: ErrorBody = {};
 export const POST = async (request: Request) => {
-  let { nftCreator } = schema.parse(await request.json());
-  if (!isAddress(nftCreator))
-    errors.nftCreator = ["The wallet address is invalid"];
+  try {
+    let { address, file, metadata } = schema.parse(await request.json());
+    // change date string to timestamp
+    metadata.date = `${(new Date(metadata.date).getTime() / 1000).toFixed()}`;
+    if (!isAddress(address))
+      errors.nftCreator = ["The wallet address is invalid"];
 
-  if (Object.keys(errors).length > 0)
-    return Response.json(errors, {
-      status: 400,
-    });
-  return Response.json({ url: request.url, nftCreator });
+    if (Object.keys(errors).length > 0)
+      return Response.json(errors, {
+        status: 400,
+      });
+    return Response.json({ url: request.url, address, file, metadata });
+  } catch (e: unknown) {
+    errors.date = ["Could not parse date"];
+  }
 };
