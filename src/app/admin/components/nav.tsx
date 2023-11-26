@@ -60,8 +60,18 @@ export const AdminNav = () => {
     },
     {
       title: "Minutes",
-      href: "/admin/minute",
-      children: [],
+      children: [
+        {
+          title: "Manage Minutes",
+          href: "/admin/minute",
+          children: [],
+        },
+        {
+          title: "Create a Minute",
+          href: "/admin/minute/new",
+          children: [],
+        },
+      ],
     },
     {
       title: "Members and Roles",
