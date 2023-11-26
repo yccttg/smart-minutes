@@ -1,5 +1,5 @@
 import { InputHTMLAttributes } from "react";
-import CrossIcon from "public/svg/arrow-right.svg";
+import CrossIcon from "public/svg/close.svg";
 import { ChangeEvent, useState } from "react";
 
 export const FormInput = (
@@ -69,36 +69,49 @@ export const ListInput = (props: ListInputProps) => {
         >
           <div className="h-6 opacity-80 group-hover:opacity-90">{item}</div>
           <span
-            className="absolute inset-y-auto right-2 top-2 cursor-pointer text-danger opacity-0 group-hover:opacity-100"
+            className="absolute inset-y-auto right-1 top-1 cursor-pointer text-danger opacity-0 group-hover:opacity-100"
             onClick={() => {
               props.onChange?.(props.values.filter((_, idx) => idx !== index));
             }}
           >
-            <CrossIcon width={16} />
+            <CrossIcon className="w-6 h-6" />
           </span>
         </div>
       ))}
-      <input
-        className="m-2 h-8 rounded-full border border-slate-400 bg-white px-3"
-        placeholder={props.placeholder}
-        value={newValue}
-        onChange={(event) => {
-          setNewValue(event.target.value);
-          props.onChangeInput?.(event);
-        }}
-        onCompositionStart={startComposition}
-        onCompositionEnd={endComposition}
-        onKeyDown={(event) => {
-          if (composing) {
-            return;
-          }
-          if (event.key === "Enter" && newValue.length > 0) {
-            event.preventDefault();
-            props.onChange?.([...props.values, newValue]);
-            setNewValue("");
-          }
-        }}
-      />
+      <div className="flex gap-0 m-2">
+        <input
+          className="h-8 rounded-l-full border border-slate-400 bg-white px-3 grow"
+          placeholder={props.placeholder}
+          value={newValue}
+          onChange={(event) => {
+            setNewValue(event.target.value);
+            props.onChangeInput?.(event);
+          }}
+          onCompositionStart={startComposition}
+          onCompositionEnd={endComposition}
+          onKeyDown={(event) => {
+            if (composing) {
+              return;
+            }
+            if (event.key === "Enter" && newValue.length > 0) {
+              event.preventDefault();
+              props.onChange?.([...props.values, newValue]);
+              setNewValue("");
+            }
+          }}
+        />
+        <button
+          className="bg-success text-white h-8 rounded-r-full w-[100px]"
+          onClick={() => {
+            if (newValue.length > 0) {
+              props.onChange?.([...props.values, newValue]);
+              setNewValue("");
+            }
+          }}
+        >
+          Add
+        </button>
+      </div>
     </div>
   );
 };
