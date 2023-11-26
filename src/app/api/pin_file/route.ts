@@ -18,6 +18,8 @@ const schema = z.object({
   }),
 });
 
+export type NFTMetadata = z.infer<typeof schema>;
+
 const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
 const errors: ErrorBody = {};
 export const POST = async (request: Request) => {

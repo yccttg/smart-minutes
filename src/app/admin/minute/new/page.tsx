@@ -1,10 +1,20 @@
 "use client";
 import { useState } from "react";
-import { FormInput } from "../../components/formControl";
+import { FormInput, ListInput } from "../../components/formControl";
+import { NFTMetadata } from "@/app/api/pin_file/route";
 
 export default function AdminPage() {
-  const [formData, setFormData] = useState({
-    date: "",
+  const [formData, setFormData] = useState<NFTMetadata>({
+    file: "",
+    address: "",
+    metadata: {
+      date: "",
+      title: "",
+      members: [],
+      agenda: [],
+      description: "",
+      conclusion: "",
+    },
   });
 
   return (
@@ -25,6 +35,17 @@ export default function AdminPage() {
           type="text"
           placeholder="Gumba Sanitization"
           label="Meeting Title"
+        />
+        <ListInput
+          label="Agendas"
+          values={formData.metadata.agenda}
+          onChange={(v) => {
+            setFormData({
+              ...formData,
+              metadata: { ...formData.metadata, agenda: v },
+            });
+          }}
+          placeholder="Enter to add new agenda"
         />
         <FormInput
           multiLines={true}
