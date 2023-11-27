@@ -5,20 +5,26 @@ import { NFTMetadata } from "@/app/api/pin_file/route";
 import { useAccount, useSignMessage } from "wagmi";
 import { randomBytes } from "ethers";
 import axios from "axios";
+import { signMessage } from "viem";
 
-type Signature = {
-  nonce: string;
-  signedMessage: string;
+type PinFileData = {
+  file: string;
+  address: `0x${string}`;
+  metadata: {
+    date: string;
+    title: string;
+    members: string[];
+    agenda: string[];
+    description: string;
+    conclusion: string;
+  };
 };
 
 export default function AdminPage() {
   const { isConnected, address } = useAccount();
-  const [nonce, setNonce] = useState("");
-  const [formData, setFormData] = useState<
-    NFTMetadata & { signature?: Signature }
-  >({
+  const [formData, setFormData] = useState<PinFileData>({
     file: "",
-    address: "",
+    address: "0x00",
     metadata: {
       date: "",
       title: "",
@@ -33,9 +39,9 @@ export default function AdminPage() {
       axios
         .post("/api/pin_file", {
           ...formData,
-          signature: {
-            nonce: variables.message,
-            signedMessage: data,
+          crypto: {
+            message: variables.message,
+            signature: data,
           },
         })
         .then((resp) => {
@@ -48,18 +54,6 @@ export default function AdminPage() {
       setFormData({ ...formData, address });
     }
   }, [address]);
-  useEffect(() => {
-    if (signedMessage) {
-      setFormData({
-        ...formData,
-        signature: { nonce: nonce.toString(), signedMessage },
-      });
-    }
-  }, [signedMessage]);
-
-  useEffect(() => {
-    setNonce(randomBytes(32).toString().replaceAll(",", ""));
-  }, []);
 
   return (
     <main className="mb-8">
@@ -68,7 +62,9 @@ export default function AdminPage() {
         className="flex flex-col gap-5"
         onSubmit={(e) => {
           e.preventDefault();
-          signMessage({ message: nonce });
+          signMessage({
+            message: Buffer.from(randomBytes(32)).toString("hex"),
+          });
         }}
       >
         <FormInput
