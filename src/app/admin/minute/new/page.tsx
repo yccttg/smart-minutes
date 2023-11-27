@@ -1,10 +1,22 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormInput, ListInput } from "../../components/formControl";
 import { NFTMetadata } from "@/app/api/pin_file/route";
+import { useAccount, useSignMessage } from "wagmi";
+import { randomBytes } from "ethers";
+import axios from "axios";
+
+type Signature = {
+  nonce: string;
+  signedMessage: string;
+};
 
 export default function AdminPage() {
-  const [formData, setFormData] = useState<NFTMetadata>({
+  const { isConnected, address } = useAccount();
+  const [nonce, setNonce] = useState("");
+  const [formData, setFormData] = useState<
+    NFTMetadata & { signature?: Signature }
+  >({
     file: "",
     address: "",
     metadata: {
@@ -16,6 +28,38 @@ export default function AdminPage() {
       conclusion: "",
     },
   });
+  const { data: signedMessage, signMessage } = useSignMessage({
+    onSuccess: (data, variables) => {
+      axios
+        .post("/api/pin_file", {
+          ...formData,
+          signature: {
+            nonce: variables.message,
+            signedMessage: data,
+          },
+        })
+        .then((resp) => {
+          return;
+        });
+    },
+  });
+  useEffect(() => {
+    if (address) {
+      setFormData({ ...formData, address });
+    }
+  }, [address]);
+  useEffect(() => {
+    if (signedMessage) {
+      setFormData({
+        ...formData,
+        signature: { nonce: nonce.toString(), signedMessage },
+      });
+    }
+  }, [signedMessage]);
+
+  useEffect(() => {
+    setNonce(randomBytes(32).toString().replaceAll(",", ""));
+  }, []);
 
   return (
     <main className="mb-8">
@@ -24,6 +68,7 @@ export default function AdminPage() {
         className="flex flex-col gap-5"
         onSubmit={(e) => {
           e.preventDefault();
+          signMessage({ message: nonce });
         }}
       >
         <FormInput
@@ -31,12 +76,26 @@ export default function AdminPage() {
           placeholder="date of meeting"
           label="Meeting Date"
           required
+          value={formData.metadata.date}
+          onChange={(e) => {
+            setFormData({
+              ...formData,
+              metadata: { ...formData.metadata, date: e.target.value },
+            });
+          }}
         />
         <FormInput
           type="text"
           placeholder="Gumba Sanitization"
           label="Meeting Title"
           required
+          value={formData.metadata.title}
+          onChange={(e) => {
+            setFormData({
+              ...formData,
+              metadata: { ...formData.metadata, title: e.target.value },
+            });
+          }}
         />
         <ListInput
           inline
@@ -66,19 +125,56 @@ export default function AdminPage() {
           type="text"
           placeholder="Enter Description Here ..."
           label="Meeting Description"
+          required
+          value={formData.metadata.description}
+          onChange={(e) => {
+            setFormData({
+              ...formData,
+              metadata: { ...formData.metadata, description: e.target.value },
+            });
+          }}
         />
         <FormInput
           multiLines={true}
           type="text"
           placeholder="conclusion of the meeting"
           label="conclusion"
+          required
+          value={formData.metadata.conclusion}
+          onChange={(e) => {
+            setFormData({
+              ...formData,
+              metadata: { ...formData.metadata, conclusion: e.target.value },
+            });
+          }}
         />
+        <FormInput
+          className="file:text-error file:border-none file:h-full py-0 pl-0 file:p-1 file:px-4"
+          required
+          type="file"
+          label="File"
+          accept="image/*"
+          onChange={(e) => {
+            // @ts-ignore
+            let file: File = e.target.files[0];
+            if (file) {
+              const reader = new FileReader();
+              reader.onloadend = () => {
+                if (typeof reader.result === "string") {
+                  setFormData({ ...formData, file: reader.result });
+                }
+              };
+              reader.readAsDataURL(file);
+            }
+          }}
+        />
+        {<div>Signature: {signedMessage}</div>}
         <button
-          disabled={false}
+          disabled={!isConnected}
           type="submit"
           className="bg-primary text-white font-bold px-4 py-2 rounded-lg hover:bg-slate-600 disabled:bg-slate-400"
         >
-          Submit
+          Sign message and Submit
         </button>
       </form>
     </main>
