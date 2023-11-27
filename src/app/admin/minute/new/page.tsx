@@ -18,7 +18,7 @@ export default function AdminPage() {
   });
 
   return (
-    <main>
+    <main className="mb-8">
       <h1 className="text-2xl font-bold">Add Minute</h1>
       <form
         className="flex flex-col gap-5"
@@ -30,11 +30,25 @@ export default function AdminPage() {
           type="date"
           placeholder="date of meeting"
           label="Meeting Date"
+          required
         />
         <FormInput
           type="text"
           placeholder="Gumba Sanitization"
           label="Meeting Title"
+          required
+        />
+        <ListInput
+          inline
+          label="Members"
+          values={formData.metadata.members}
+          onChange={(v) => {
+            setFormData({
+              ...formData,
+              metadata: { ...formData.metadata, members: v },
+            });
+          }}
+          placeholder="Enter to add a member"
         />
         <ListInput
           label="Agendas"
@@ -59,7 +73,11 @@ export default function AdminPage() {
           placeholder="conclusion of the meeting"
           label="conclusion"
         />
-        <button type="submit" className="bg-primary text-white font-bold">
+        <button
+          disabled={false}
+          type="submit"
+          className="bg-primary text-white font-bold px-4 py-2 rounded-lg hover:bg-slate-600 disabled:bg-slate-400"
+        >
           Submit
         </button>
       </form>
