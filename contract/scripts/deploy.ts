@@ -18,9 +18,7 @@ const contractConfigs: ContractConfig[] = [
     args: [
       process.env.OWNER_ADDRESS as `0x${string}`, // initialOwner
     ],
-    options: {
-      // target: process.env.OWNER_ADDRESS as `0x${string}`,
-    },
+    options: {},
     postDeploy: () => {},
   },
 ];
@@ -28,7 +26,6 @@ const contractConfigs: ContractConfig[] = [
 async function deploy(config: ContractConfig) {
   console.log("Deploying Contract with the following configuration:");
   console.log(config);
-
   const contract = await ethers.deployContract(
     config.name,
     config.args,
