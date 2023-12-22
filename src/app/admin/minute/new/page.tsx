@@ -1,11 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import { FormInput, ListInput } from "../../components/formControl";
-import { NFTMetadata } from "@/app/api/pin_file/route";
+// import { NFTMetadata } from "@/app/api/pin_file/route";
 import { useAccount, useSignMessage } from "wagmi";
 import { randomBytes } from "ethers";
 import axios from "axios";
-import { signMessage } from "viem";
 
 type PinFileData = {
   file: string;
