@@ -1,22 +1,86 @@
 import { ethers } from "hardhat";
+import dotenv from "dotenv";
+import readline from "readline";
+dotenv.config();
+
+interface ContractConfig {
+  name: string;
+  ownable: boolean;
+  args: string[];
+  options: object;
+  postDeploy?: Function;
+}
+
+const contractConfigs: ContractConfig[] = [
+  {
+    name: "SmartMinute",
+    ownable: true,
+    args: [
+      process.env.OWNER_ADDRESS as `0x${string}`, // initialOwner
+    ],
+    options: {
+      // target: process.env.OWNER_ADDRESS as `0x${string}`,
+    },
+    postDeploy: () => {},
+  },
+];
+
+async function deploy(config: ContractConfig) {
+  console.log("Deploying Contract with the following configuration:");
+  console.log(config);
+
+  const contract = await ethers.deployContract(
+    config.name,
+    config.args,
+    config.options
+  );
+
+  await contract.waitForDeployment();
+  console.log("=".repeat(70));
+  console.log("  Contract Address: ", await contract.getAddress());
+  console.log("=".repeat(70));
+
+  // transfer ownership of the contract if the contract is ownable
+  if (config.ownable) {
+    await contract.transferOwnership(process.env.OWNER_ADDRESS as string);
+  }
+  await config.postDeploy?.(contract);
+}
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const unlockTime = currentTimestampInSeconds + 60;
+  if (contractConfigs.length > 1) {
+    console.log(
+      `Please select one of the contracts below:\n\n${contractConfigs
+        .map((item, idx) => `${idx}. ${item.name}`)
+        .join("\n")}`
+    );
 
-  const lockedAmount = ethers.parseEther("0.001");
+    let prompt = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
 
-  const lock = await ethers.deployContract("Lock", [unlockTime], {
-    value: lockedAmount,
-  });
+    prompt.question(
+      `\nSelect The Contract to deploy [Eg: 1]:\t`,
+      async (index: string) => {
+        console.log(index);
+        // @ts-ignore
+        let config: ContractConfig = contractConfigs[parseInt(index)];
 
-  await lock.waitForDeployment();
+        if (config === undefined) {
+          console.log("No valid contracts selected !!\n");
+          process.exit(1);
+        }
 
-  console.log(
-    `Lock with ${ethers.formatEther(
-      lockedAmount
-    )}ETH and unlock timestamp ${unlockTime} deployed to ${lock.target}`
-  );
+        await deploy(config);
+
+        prompt.close();
+      }
+    );
+  } else {
+    await deploy(contractConfigs[0]);
+  }
+  process.exit(0);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

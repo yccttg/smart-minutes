@@ -17,6 +17,7 @@ import {
   polygonMumbai,
   skaleCalypso,
   skaleCalypsoTestnet,
+  hardhat,
 } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 import "@rainbow-me/rainbowkit/styles.css";
@@ -24,7 +25,7 @@ import "@rainbow-me/rainbowkit/styles.css";
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [
     ...(process.env.NEXT_PUBLIC_NODE_ENV === "dev"
-      ? [skaleCalypsoTestnet, polygonMumbai]
+      ? [hardhat, skaleCalypsoTestnet, polygonMumbai]
       : [skaleCalypso, polygon]),
   ],
   [publicProvider()]
