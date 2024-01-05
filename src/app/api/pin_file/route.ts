@@ -8,7 +8,6 @@ type ErrorBody = {
 
 const schema = z.object({
   address: z.string(),
-  file: z.string(),
   metadata: z.object({
     date: z.string(),
     title: z.string(),
@@ -29,9 +28,7 @@ const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
 const errors: ErrorBody = {};
 export const POST = async (request: Request) => {
   try {
-    let { address, file, metadata, crypto } = schema.parse(
-      await request.json()
-    );
+    let { address, metadata, crypto } = schema.parse(await request.json());
     // check if signature and address matches
     const recoveredAddress = await recoverMessageAddress({
       message: crypto.message,
@@ -50,7 +47,7 @@ export const POST = async (request: Request) => {
       return Response.json(errors, {
         status: 400,
       });
-    return Response.json({ address, file, metadata, crypto });
+    return Response.json({ address, metadata, crypto });
   } catch (e: unknown) {
     errors.date = ["Could not parse date"];
   }

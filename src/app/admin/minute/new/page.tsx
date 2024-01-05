@@ -7,7 +7,6 @@ import { randomBytes } from "ethers";
 import axios from "axios";
 
 type PinFileData = {
-  file: string;
   address: `0x${string}`;
   metadata: {
     date: string;
@@ -22,7 +21,6 @@ type PinFileData = {
 export default function AdminPage() {
   const { isConnected, address } = useAccount();
   const [formData, setFormData] = useState<PinFileData>({
-    file: "",
     address: "0x00",
     metadata: {
       date: "",
@@ -61,6 +59,10 @@ export default function AdminPage() {
         className="flex flex-col gap-5"
         onSubmit={(e) => {
           e.preventDefault();
+          console.log(
+            "🚀 ~ file: page.tsx:66 ~ AdminPage ~ message:",
+            formData
+          );
           signMessage({
             message: Buffer.from(randomBytes(32)).toString("hex"),
           });
@@ -141,26 +143,6 @@ export default function AdminPage() {
               ...formData,
               metadata: { ...formData.metadata, conclusion: e.target.value },
             });
-          }}
-        />
-        <FormInput
-          className="file:text-error file:border-none file:h-full py-0 pl-0 file:p-1 file:px-4"
-          required
-          type="file"
-          label="File"
-          accept="image/*"
-          onChange={(e) => {
-            // @ts-ignore
-            let file: File = e.target.files[0];
-            if (file) {
-              const reader = new FileReader();
-              reader.onloadend = () => {
-                if (typeof reader.result === "string") {
-                  setFormData({ ...formData, file: reader.result });
-                }
-              };
-              reader.readAsDataURL(file);
-            }
           }}
         />
         {<div>Signature: {signedMessage}</div>}
