@@ -1,3 +1,4 @@
+import minuteABI from "@/utils/abi/SmartMinuteAbi.json";
 interface Address {
   [name: string]: `0x${string}`;
 }
@@ -10,4 +11,12 @@ const addresses: Address = {
 
 export const getTargetAddress = (name: "worker" | "owner" | "minute") => {
   return addresses[name];
+};
+
+export const getMinuteContract = (chainId?: number) => {
+  return {
+    address: getTargetAddress("minute"),
+    abi: minuteABI,
+    chainId: chainId,
+  };
 };

@@ -2,7 +2,13 @@
 import { useRouter, usePathname } from "next/navigation";
 import { PropsWithChildren } from "react";
 import ArrowRight from "public/svg/arrow-right.svg";
-import { useAccount } from "wagmi";
+import {
+  useAccount,
+  useContractRead,
+  useContractReads,
+  useNetwork,
+} from "wagmi";
+import { getMinuteContract, getTargetAddress } from "@/utils/contract";
 
 const NavItem = ({
   href,
@@ -51,7 +57,18 @@ type NavItemType = {
 };
 
 export const AdminNav = () => {
-  const { isConnected } = useAccount();
+  const { address, connector, isConnected } = useAccount();
+  const minuteAddress = getTargetAddress("minute");
+  const { chain } = useNetwork();
+  const minuteContract = getMinuteContract(chain?.id);
+
+  const { data, isLoading } = useContractRead({
+    ...minuteContract,
+    functionName: "owner",
+    args: [],
+  });
+  console.log("🚀 ~ file: nav.tsx:69 ~ AdminNav ~ data:", data);
+
   const navItems: NavItemType[] = [
     {
       title: "Admin",
@@ -97,6 +114,8 @@ export const AdminNav = () => {
             ))}
         </NavItem>
       ))}
+      <div className="grow" />
+      <div className="text-xs">{address}</div>
     </div>
   );
 };
