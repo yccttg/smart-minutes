@@ -8,7 +8,10 @@
     "compile": "npx hardhat compile",
     "run-node": "npx hardhat node",
     "deploy:local": "npx hardhat run scripts/deploy.ts --network hardhat",
-    "deploy:skale": "npx hardhat run scripts/deploy.ts --network skale"
+    "deploy:skale": "npx hardhat run scripts/deploy.ts --network skale",
+    "deploy:skale_test": "npx hardhat run scripts/deploy.ts --network skale_test",
+    "deploy:mumbai": "npx hardhat run scripts/deploy.ts --network polygon_mumbai",
+    "verify:mumbai": "npx hardhat verify --network polygon_mumbai --contract contracts/SmartMinute.sol:SmartMinute"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.2",
