@@ -1,6 +1,12 @@
 import { isAddress } from "ethers";
 import { z } from "zod";
 import { recoverMessageAddress } from "viem";
+import { json } from "stream/consumers";
+import { URL } from "url";
+import { Blob } from "buffer";
+import pinataSDK from "@pinata/sdk";
+const pinata = new pinataSDK({ pinataJWTKey: process.env.PINATA_JWT });
+import fs from "fs";
 
 type ErrorBody = {
   [k: string]: [string];
@@ -47,7 +53,27 @@ export const POST = async (request: Request) => {
       return Response.json(errors, {
         status: 400,
       });
-    return Response.json({ address, metadata, crypto });
+
+    // File Pinning process
+    const blob = new Blob([new TextEncoder().encode(JSON.stringify(json))], {
+      type: "application/json",
+    });
+    const file = URL.createObjectURL(blob);
+
+    const response = await pinata.pinFileToIPFS(blob, {
+      pinataMetadata: {
+        name: `${new Date().toISOString()}-metadata.title`,
+      },
+    });
+    console.log("🚀 ~ file: route.ts:68 ~ POST ~ response:", response);
+
+    return await Response.json({
+      address,
+      metadata,
+      crypto,
+      url: file,
+      response,
+    });
   } catch (e: unknown) {
     errors.date = ["Could not parse date"];
   }

@@ -114,8 +114,6 @@ export const AdminNav = () => {
             ))}
         </NavItem>
       ))}
-      <div className="grow" />
-      <div className="text-xs">{address}</div>
     </div>
   );
 };

@@ -4,8 +4,7 @@ import { FormInput, ListInput } from "../../components/formControl";
 import { useAccount, useSignMessage } from "wagmi";
 import { randomBytes } from "ethers";
 import axios from "axios";
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs } from "firebase/firestore/lite";
+import { FirebaseUtils, Member } from "@/utils/firebaseUtils";
 
 type PinFileData = {
   address: `0x${string}`;
@@ -18,25 +17,6 @@ type PinFileData = {
     conclusion: string;
   };
 };
-
-type Member = {
-  full_name: string;
-  wallet_address: `$0x${string}`;
-  is_member: boolean;
-  role: string;
-};
-
-// Get a list of users
-async function getUsers(db: any) {
-  const usersCol = collection(db, "members");
-  const userSnapshot = await getDocs(usersCol);
-  return userSnapshot.docs[0].data().members;
-}
-
-const app = initializeApp({
-  projectId: "smart-minutes-nft",
-});
-const db = getFirestore(app);
 
 export default function AdminPage() {
   const { isConnected, address } = useAccount();
@@ -74,7 +54,7 @@ export default function AdminPage() {
   }, [address]);
 
   useEffect(() => {
-    getUsers(db)
+    FirebaseUtils.getUsers()
       .then((resp) => {
         setCurrentMembers(resp);
       })
