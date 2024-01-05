@@ -23,6 +23,7 @@ type Member = {
   full_name: string;
   wallet_address: `$0x${string}`;
   is_member: boolean;
+  role: string;
 };
 
 // Get a list of users
