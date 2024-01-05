@@ -1,10 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 import { FormInput, ListInput } from "../../components/formControl";
-// import { NFTMetadata } from "@/app/api/pin_file/route";
 import { useAccount, useSignMessage } from "wagmi";
 import { randomBytes } from "ethers";
 import axios from "axios";
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, getDocs } from "firebase/firestore/lite";
 
 type PinFileData = {
   address: `0x${string}`;
@@ -17,6 +18,24 @@ type PinFileData = {
     conclusion: string;
   };
 };
+
+type Member = {
+  full_name: string;
+  wallet_address: `$0x${string}`;
+  is_member: boolean;
+};
+
+// Get a list of users
+async function getUsers(db: any) {
+  const usersCol = collection(db, "members");
+  const userSnapshot = await getDocs(usersCol);
+  return userSnapshot.docs[0].data().members;
+}
+
+const app = initializeApp({
+  projectId: "smart-minutes-nft",
+});
+const db = getFirestore(app);
 
 export default function AdminPage() {
   const { isConnected, address } = useAccount();
@@ -31,6 +50,7 @@ export default function AdminPage() {
       conclusion: "",
     },
   });
+  const [currentMembers, setCurrentMembers] = useState<Member[]>([]);
   const { data: signedMessage, signMessage } = useSignMessage({
     onSuccess: (data, variables) => {
       axios
@@ -51,6 +71,16 @@ export default function AdminPage() {
       setFormData({ ...formData, address });
     }
   }, [address]);
+
+  useEffect(() => {
+    getUsers(db)
+      .then((resp) => {
+        setCurrentMembers(resp);
+      })
+      .catch((err) => {
+        console.error("Could not fetch members from the database");
+      });
+  }, []);
 
   return (
     <main className="mb-8">
@@ -95,8 +125,8 @@ export default function AdminPage() {
           }}
         />
         <ListInput
-          inline
           label="Members"
+          inline
           values={formData.metadata.members}
           onChange={(v) => {
             setFormData({
@@ -105,6 +135,7 @@ export default function AdminPage() {
             });
           }}
           placeholder="Enter to add a member"
+          hints={currentMembers.map((m) => m.full_name)}
         />
         <ListInput
           label="Agendas"

@@ -1,4 +1,4 @@
-import { InputHTMLAttributes } from "react";
+import { InputHTMLAttributes, useEffect } from "react";
 import CrossIcon from "public/svg/close.svg";
 import { ChangeEvent, useState } from "react";
 
@@ -53,13 +53,20 @@ type ListInputProps = {
   onChangeInput?: (event: ChangeEvent<HTMLInputElement>) => void;
   label?: string;
   inline?: boolean;
+  hints?: string[];
 };
 
 export const ListInput = (props: ListInputProps) => {
   const [newValue, setNewValue] = useState("");
   const [composing, setComposing] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
   const startComposition = () => setComposing(true);
   const endComposition = () => setComposing(false);
+
+  useEffect(() => {
+    if (newValue.length < 3) setShowOptions(false);
+    else setShowOptions(true);
+  }, [newValue]);
   return (
     <div className="flex flex-col">
       {props.label && <label className="font-bold">{props.label}</label>}
@@ -83,7 +90,9 @@ export const ListInput = (props: ListInputProps) => {
           </div>
         ))}
         <div
-          className={`flex gap-0 m-2 ${props.inline ? "max-w-[300px]" : ""}`}
+          className={`flex relative gap-0 m-2 ${
+            props.inline ? "max-w-[300px]" : ""
+          }`}
         >
           <input
             className="h-8 rounded-l-full border border-slate-400 bg-white px-3 grow"
@@ -117,6 +126,25 @@ export const ListInput = (props: ListInputProps) => {
           >
             Add
           </button>
+
+          {props.hints && props.hints.length > 0 && showOptions && (
+            <div className="absolute w-full top-full border border-neutral-200">
+              {props.hints
+                .filter((h) => h.toLowerCase().includes(newValue.toLowerCase()))
+                .map((h, idx) => (
+                  <div
+                    className="hover:bg-slate-400"
+                    key={idx}
+                    onClick={() => {
+                      setShowOptions(false);
+                      props.onChange?.([...props.values, h]);
+                    }}
+                  >
+                    {h}
+                  </div>
+                ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
